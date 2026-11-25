@@ -14,7 +14,7 @@ export default function ArrayInput({ values, setValues }) {
     setText(t);
     if (!t.trim()) { setValues([]); setErr(''); return; }
     const p = parseList(t);
-    if (p) { setValues(p); setErr(''); } else setErr('Use up to 12 whole numbers separated by commas.');
+    if (p) { setValues(p); setErr(''); } else setErr('Use up to 10,000 whole numbers separated by commas (each with magnitude under 1,000,000).');
   };
   const random = () => setValues(Array.from({ length: 7 }, () => 1 + Math.floor(Math.random() * 99)));
 

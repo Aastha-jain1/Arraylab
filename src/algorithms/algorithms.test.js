@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { addressSteps } from './addressCalc.js';
 import { insertSteps, deleteSteps } from './arrayOps.js';
 import { linearSteps, binarySteps, isSorted } from './search.js';
+import { SORTS } from './sorting.js';
 const last = (s) => s[s.length - 1];
 
 test('address: 0-based, 1-based, out of range', () => {
@@ -66,4 +67,31 @@ test('binary search matches linear search and respects the log2 bound', () => {
     assert.ok(b.Comparisons <= Math.floor(Math.log2(n || 1)) + 1);
   }
   assert.ok(isSorted([1, 2, 2, 3]) && !isSorted([2, 1]));
+});
+
+test('all sorting algorithms handle required edge cases without mutating input', () => {
+  const cases = [
+    [[], []], [[7], [7]], [[-4, -1, 0, 3], [-4, -1, 0, 3]],
+    [[9, 6, 2, -1], [-1, 2, 6, 9]], [[4, 1, 4, -3, 1], [-3, 1, 1, 4, 4]],
+    [[-10, 3, 0, -2, 8, 3], [-10, -2, 0, 3, 3, 8]],
+  ];
+  for (const { name, run } of SORTS) for (const [input, expected] of cases) {
+    const original = [...input];
+    assert.deepEqual(run(input), expected, `${name} should sort ${input}`);
+    assert.deepEqual(input, original, `${name} should leave its input unchanged`);
+  }
+});
+
+test('all sorting algorithms handle large and deterministic randomized arrays', () => {
+  let seed = 123456;
+  const random = () => { seed = (seed * 48271) % 2147483647; return (seed % 20001) - 10000; };
+  const input = Array.from({ length: 4000 }, random);
+  const expected = [...input].sort((a, b) => a - b);
+  for (const { name, run } of SORTS) assert.deepEqual(run(input), expected, `${name} should sort a large array`);
+});
+
+test('integer sorting rejects invalid input and counting sort documents its range limit', () => {
+  for (const { run } of SORTS) assert.throws(() => run([1, 2.5]), /safe integers/);
+  const counting = SORTS.find((sort) => sort.id === 'counting');
+  assert.throws(() => counting.run([-2_000_000, 2_000_000]), /range of at most 2,000,000/);
 });

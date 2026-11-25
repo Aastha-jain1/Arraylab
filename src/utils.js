@@ -1,7 +1,7 @@
-// Parses "10, 20 30" into [10,20,30]. Returns null if invalid (max 12 whole numbers).
+// Parses "10, 20 30" into [10,20,30]. Returns null if invalid (max 10,000 whole numbers).
 export const parseList = (t) => {
   const p = t.split(/[\s,]+/).filter(Boolean);
-  if (!p.length || p.length > 12) return null;
+  if (!p.length || p.length > 10000) return null;
   const n = p.map(Number);
   return n.every((x) => Number.isInteger(x) && Math.abs(x) < 1e6) ? n : null;
 };

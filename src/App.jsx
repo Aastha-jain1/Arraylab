@@ -5,6 +5,7 @@ import InsertModule from './modules/InsertModule.jsx';
 import DeleteModule from './modules/DeleteModule.jsx';
 import SearchModule from './modules/SearchModule.jsx';
 import CompareModule from './modules/CompareModule.jsx';
+import SortingModule from './modules/SortingModule.jsx';
 
 const Linear = (p) => <SearchModule {...p} kind="linear" />;
 const Binary = (p) => <SearchModule {...p} kind="binary" />;
@@ -15,6 +16,7 @@ const TABS = [
   ['linear', 'Linear search', Linear],
   ['binary', 'Binary search', Binary],
   ['compare', 'Compare searches', CompareModule],
+  ['sorting', 'Sorting algorithms', SortingModule],
 ];
 
 export default function App() {
